@@ -1,5 +1,3 @@
---Creating table ETLLog
-
 CREATE TABLE GuideToursApp.ETLLog (
     ETLProcess VARCHAR(50) PRIMARY KEY,
     LastProcessedID INT
@@ -164,12 +162,12 @@ DELETE FROM GuideToursApp.dimdate;
 END;
 $$;
 
--- Schedule all procedures to run at midnight (need to add a cron extension for this to work)
+CALL GuideToursApp.UserETLProcess();
+CALL GuideToursApp.RoomETLProcess();
+
+-- Schedule all procedures to run at midnight (need to add a cron extension for this to work), so skip this if you dont have it
 SELECT cron.schedule('0 0 * * *', 'CALL GuideToursApp.UserETLProcess()');
 SELECT cron.schedule('0 0 * * *', 'CALL GuideToursApp.RoomETLProcess()');
 SELECT cron.schedule('0 0 * * *', 'CALL GuideToursApp.CityETLProcess()');
 SELECT cron.schedule('0 0 * * *', 'CALL GuideToursApp.CountryETLProcess()');
 SELECT cron.schedule('0 0 * * *', 'CALL GuideToursApp.DateETLProcess()');
-
-
---(or you can call one procedure) like this -> CALL GuideToursApp.DateETLProcess();
